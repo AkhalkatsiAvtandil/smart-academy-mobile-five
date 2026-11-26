@@ -1,0 +1,86 @@
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  Dimensions,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+} from "react-native";
+import { Product } from "../../types/types";
+
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
+
+export default function Index() {
+  const router = useRouter();
+  const [products, setProducts] = useState<Product[] | null>(null);
+
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  if (!products) {
+    return <Text style={{ padding: 20 }}>Loading products...</Text>;
+  }
+
+  return (
+    <FlatList
+      contentContainerStyle={styles.container}
+      data={products}
+      getItemLayout={(data, index) => ({
+        length: windowHeight * 0.3,
+        offset: windowHeight * 0.3 * index,
+        index,
+      })}
+      initialNumToRender={5}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => (
+        <Pressable
+          style={styles.listItem}
+          onPress={() =>
+            router.push({ pathname: "/details/[id]", params: { id: item.id } })
+          }
+        >
+          <Image source={item.image} style={styles.image} />
+          <Text key={item.id} style={styles.listTitle}>
+            {item.title}
+          </Text>
+          <Text>${item.price}</Text>
+          <Text>{item.description}</Text>
+          <Text>Category: {item.category}</Text>
+        </Pressable>
+      )}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+  },
+  listItem: {
+    width: windowWidth * 0.9,
+    padding: 10,
+    marginVertical: 10,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  listTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  image: {
+    width: "100%",
+    height: 200,
+    resizeMode: "contain",
+    marginBottom: 10,
+  },
+});
