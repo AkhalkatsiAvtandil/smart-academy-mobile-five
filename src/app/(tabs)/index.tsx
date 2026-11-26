@@ -3,7 +3,6 @@ import { Image } from "expo-image";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Dimensions,
   FlatList,
   Pressable,
   StyleSheet,
@@ -11,9 +10,6 @@ import {
   View,
 } from "react-native";
 import { Product } from "../../types/types";
-
-const windowHeight = Dimensions.get("window").height;
-const windowWidth = Dimensions.get("window").width;
 
 export default function Index() {
   const router = useRouter();
@@ -77,41 +73,72 @@ export default function Index() {
   };
 
   if (!products) {
-    return <Text style={{ padding: 20 }}>Loading products...</Text>;
+    return (
+      <View style={styles.loading}>
+        <Text style={styles.loadingText}>Loading products...</Text>
+      </View>
+    );
   }
 
   return (
     <FlatList
-      contentContainerStyle={styles.container}
+      contentContainerStyle={styles.listContent}
       data={products}
-      getItemLayout={(data, index) => ({
-        length: windowHeight * 0.3,
-        offset: windowHeight * 0.3 * index,
-        index,
-      })}
-      initialNumToRender={5}
+      columnWrapperStyle={styles.row}
+      initialNumToRender={6}
       keyExtractor={(item) => item.id.toString()}
+      ListHeaderComponent={
+        <View style={styles.hero}>
+          <Text style={styles.eyebrow}>THE MARKET</Text>
+          <Text style={styles.heroTitle}>Find something{"\n"}worth keeping.</Text>
+          <View style={styles.heroFooter}>
+            <Text style={styles.heroSubtitle}>
+              Everyday picks, made easy.
+            </Text>
+            <Text style={styles.productCount}>{products.length} items</Text>
+          </View>
+        </View>
+      }
+      numColumns={2}
       renderItem={({ item }) => (
         <Pressable
-          style={styles.listItem}
+          style={({ pressed }) => [
+            styles.card,
+            pressed && styles.cardPressed,
+          ]}
           onPress={() =>
             router.push({ pathname: "/details/[id]", params: { id: item.id } })
           }
         >
-          <Image source={item.image} style={styles.image} />
-          <Text key={item.id} style={styles.listTitle}>
+          <View style={styles.imageStage}>
+            <Image
+              source={item.image}
+              style={styles.image}
+              contentFit="contain"
+            />
+          </View>
+          <Text style={styles.category} numberOfLines={1}>
+            {item.category}
+          </Text>
+          <Text style={styles.productTitle} numberOfLines={2}>
             {item.title}
           </Text>
-          <Text>${item.price}</Text>
-          <Text>{item.description}</Text>
-          <Text>Category: {item.category}</Text>
+          <Text style={styles.price}>${item.price.toFixed(2)}</Text>
           <View style={styles.actions}>
             <Pressable
-              style={[styles.actionButton, styles.addButton]}
+              style={[
+                styles.actionButton,
+                cartIds.includes(item.id) ? styles.addedButton : styles.addButton,
+              ]}
               onPress={() => addToCart(item.id)}
             >
-              <Text style={styles.actionText}>
-                {cartIds.includes(item.id) ? "Added" : "Add to Cart"}
+              <Text
+                style={[
+                  styles.actionText,
+                  cartIds.includes(item.id) && styles.addedText,
+                ]}
+              >
+                {cartIds.includes(item.id) ? "In cart" : "Add to cart"}
               </Text>
             </Pressable>
             {cartIds.includes(item.id) ? (
@@ -119,7 +146,7 @@ export default function Index() {
                 style={[styles.actionButton, styles.deleteButton]}
                 onPress={() => removeFromCart(item.id)}
               >
-                <Text style={styles.actionText}>Delete</Text>
+                <Text style={styles.actionText}>Remove</Text>
               </Pressable>
             ) : null}
           </View>
@@ -130,48 +157,137 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  listContent: {
+    backgroundColor: "#f6f7f3",
+    paddingHorizontal: 18,
+    paddingBottom: 28,
+  },
+  loading: {
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f6f7f3",
   },
-  listItem: {
-    width: windowWidth * 0.9,
-    padding: 10,
-    marginVertical: 10,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 5,
+  loadingText: {
+    color: "#63736a",
+    fontSize: 15,
+  },
+  hero: {
+    paddingTop: 24,
+    paddingBottom: 22,
+  },
+  eyebrow: {
+    color: "#507362",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1.8,
+  },
+  heroTitle: {
+    color: "#183b30",
+    fontSize: 34,
+    fontWeight: "800",
+    letterSpacing: -0.8,
+    lineHeight: 40,
+    marginTop: 10,
+  },
+  heroFooter: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 12,
+  },
+  heroSubtitle: {
+    color: "#748179",
+    fontSize: 14,
+  },
+  productCount: {
+    color: "#507362",
+    fontSize: 12,
+    fontWeight: "700",
+  },
+  row: {
+    justifyContent: "space-between",
+    marginBottom: 14,
+  },
+  card: {
+    backgroundColor: "#ffffff",
+    borderColor: "#e8ece6",
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#ccc",
+    elevation: 2,
+    padding: 10,
+    shadowColor: "#183b30",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    width: "48.5%",
   },
-  listTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 5,
+  cardPressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.98 }],
+  },
+  imageStage: {
+    alignItems: "center",
+    backgroundColor: "#f3f5f0",
+    borderRadius: 13,
+    height: 150,
+    justifyContent: "center",
+    marginBottom: 12,
+    padding: 10,
   },
   image: {
+    height: "100%",
     width: "100%",
-    height: 200,
-    resizeMode: "contain",
-    marginBottom: 10,
+  },
+  category: {
+    color: "#668071",
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+  },
+  productTitle: {
+    color: "#202d27",
+    fontSize: 14,
+    fontWeight: "600",
+    lineHeight: 19,
+    marginTop: 5,
+    minHeight: 38,
+  },
+  price: {
+    color: "#183b30",
+    fontSize: 17,
+    fontWeight: "800",
+    marginTop: 8,
   },
   actions: {
     flexDirection: "row",
-    gap: 8,
-    marginTop: 12,
+    marginTop: 11,
   },
   actionButton: {
     flex: 1,
     alignItems: "center",
-    borderRadius: 8,
-    paddingVertical: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    minHeight: 38,
+    paddingHorizontal: 6,
   },
   addButton: {
-    backgroundColor: "#2563eb",
+    backgroundColor: "#183b30",
+  },
+  addedButton: {
+    backgroundColor: "#edf3ef",
   },
   deleteButton: {
-    backgroundColor: "#dc2626",
+    backgroundColor: "#a84d45",
+    marginLeft: 6,
   },
   actionText: {
     color: "#ffffff",
+    fontSize: 11,
     fontWeight: "700",
+  },
+  addedText: {
+    color: "#315b48",
   },
 });

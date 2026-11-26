@@ -13,7 +13,11 @@ const ProfileScreen = () => {
   }, []);
 
   if (!user) {
-    return <Text style={{ padding: 20 }}>Loading profile...</Text>;
+    return (
+      <View style={styles.loading}>
+        <Text style={styles.loadingText}>Loading profile...</Text>
+      </View>
+    );
   }
 
   return (
@@ -22,12 +26,16 @@ const ProfileScreen = () => {
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{user.name.charAt(0)}</Text>
         </View>
-        <Text style={styles.name}>{user.name}</Text>
-        <Text style={styles.username}>@{user.username}</Text>
+        <View style={styles.identity}>
+          <Text style={styles.eyebrow}>YOUR PROFILE</Text>
+          <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.username}>@{user.username}</Text>
+        </View>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Contact information</Text>
+        <Text style={styles.sectionSubtitle}>How to reach you</Text>
         <View style={styles.infoRow}>
           <Text style={styles.label}>Email</Text>
           <Text style={styles.value}>{user.email}</Text>
@@ -44,6 +52,7 @@ const ProfileScreen = () => {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Address</Text>
+        <Text style={styles.sectionSubtitle}>Your location details</Text>
         <View style={styles.infoRow}>
           <Text style={styles.label}>Street</Text>
           <Text style={styles.value}>{user.address.street}</Text>
@@ -70,6 +79,7 @@ const ProfileScreen = () => {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Company</Text>
+        <Text style={styles.sectionSubtitle}>Work and organization</Text>
         <View style={styles.infoRow}>
           <Text style={styles.label}>Name</Text>
           <Text style={styles.value}>{user.company.name}</Text>
@@ -95,72 +105,108 @@ export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#f6f7f3",
     flexGrow: 1,
-    padding: 20,
+    padding: 18,
+    paddingBottom: 30,
+  },
+  loading: {
+    alignItems: "center",
+    backgroundColor: "#f6f7f3",
+    flex: 1,
+    justifyContent: "center",
+  },
+  loadingText: {
+    color: "#63736a",
+    fontSize: 15,
   },
   header: {
     alignItems: "center",
-    paddingVertical: 16,
+    backgroundColor: "#183b30",
+    borderRadius: 22,
+    flexDirection: "row",
+    marginBottom: 4,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
   },
   avatar: {
     alignItems: "center",
-    backgroundColor: "#2563eb",
-    borderRadius: 40,
-    height: 80,
+    backgroundColor: "#dce9df",
+    borderColor: "#ffffff",
+    borderRadius: 32,
+    borderWidth: 2,
+    height: 64,
     justifyContent: "center",
-    width: 80,
+    width: 64,
   },
   avatarText: {
-    color: "#ffffff",
-    fontSize: 34,
-    fontWeight: "700",
+    color: "#234b39",
+    fontSize: 27,
+    fontWeight: "800",
+  },
+  identity: {
+    flex: 1,
+    marginLeft: 16,
+  },
+  eyebrow: {
+    color: "#aec5b5",
+    fontSize: 10,
+    fontWeight: "800",
+    letterSpacing: 1.5,
   },
   name: {
-    color: "#0f172a",
-    fontSize: 26,
-    fontWeight: "700",
-    marginTop: 12,
+    color: "#ffffff",
+    fontSize: 21,
+    fontWeight: "800",
+    marginTop: 5,
   },
   username: {
-    color: "#64748b",
-    fontSize: 16,
-    marginTop: 4,
+    color: "#c4d2c8",
+    fontSize: 14,
+    marginTop: 3,
   },
   section: {
     backgroundColor: "#ffffff",
-    borderRadius: 14,
+    borderColor: "#e8ece6",
+    borderRadius: 18,
+    borderWidth: 1,
     marginTop: 16,
-    padding: 18,
+    paddingHorizontal: 17,
+    paddingTop: 17,
   },
   sectionTitle: {
-    color: "#0f172a",
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 8,
+    color: "#203a2e",
+    fontSize: 17,
+    fontWeight: "800",
+  },
+  sectionSubtitle: {
+    color: "#87938b",
+    fontSize: 12,
+    marginTop: 4,
+    marginBottom: 5,
   },
   infoRow: {
-    borderTopColor: "#e2e8f0",
+    borderTopColor: "#edf0ec",
     borderTopWidth: StyleSheet.hairlineWidth,
-    paddingVertical: 12,
+    paddingVertical: 11,
   },
   label: {
-    color: "#64748b",
-    fontSize: 13,
-    fontWeight: "600",
+    color: "#87938b",
+    fontSize: 11,
+    fontWeight: "700",
     marginBottom: 4,
   },
   value: {
-    color: "#1e293b",
-    fontSize: 16,
-    lineHeight: 22,
+    color: "#293a30",
+    fontSize: 14,
+    lineHeight: 20,
   },
   meta: {
     alignItems: "center",
-    paddingVertical: 20,
+    paddingVertical: 22,
   },
   metaText: {
-    color: "#94a3b8",
-    fontSize: 13,
+    color: "#8a968e",
+    fontSize: 12,
   },
 });
