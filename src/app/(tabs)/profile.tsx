@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { User } from "../../types/types";
 
-const profile = () => {
+const ProfileScreen = () => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const profile = () => {
   );
 };
 
-export default profile;
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {

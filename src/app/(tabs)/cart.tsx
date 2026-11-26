@@ -1,39 +1,87 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Cart, Product } from "../../types/types";
 
-const cart = () => {
+const CartScreen = () => {
   const [cart, setCart] = useState<Cart | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
 
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const response = await fetch("https://fakestoreapi.com/carts/1");
-        const data: Cart = await response.json();
-        setCart(data);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchCart = async () => {
+        try {
+          const saved = await AsyncStorage.getItem("cartIds");
 
-        const productDetails = await Promise.all(
-          data.products.map(async ({ productId }) => {
-            const productResponse = await fetch(
-              `https://fakestoreapi.com/products/${productId}`,
+          if (saved !== null) {
+            const savedItems = JSON.parse(saved) as
+              | number[]
+              | { productId: number; quantity: number }[];
+
+            const cartItems = savedItems.map((item) =>
+              typeof item === "number"
+                ? { productId: item, quantity: 1 }
+                : item,
             );
-            return (await productResponse.json()) as Product;
-          }),
-        );
-        setProducts(productDetails);
-      } catch (error) {
-        console.error("Error fetching cart:", error);
-      }
-    };
+            const productDetails = await Promise.all(
+              cartItems.map(async ({ productId }) => {
+                const productResponse = await fetch(
+                  `https://fakestoreapi.com/products/${productId}`,
+                );
+                return (await productResponse.json()) as Product;
+              }),
+            );
 
-    fetchCart();
-  }, []);
+            setProducts(productDetails);
+            setCart({
+              id: 1,
+              userId: 1,
+              date: new Date().toISOString(),
+              products: cartItems,
+            });
+            return;
+          }
+
+          const response = await fetch("https://fakestoreapi.com/carts/1");
+          const data: Cart = await response.json();
+          setCart(data);
+
+          const productDetails = await Promise.all(
+            data.products.map(async ({ productId }) => {
+              const productResponse = await fetch(
+                `https://fakestoreapi.com/products/${productId}`,
+              );
+              return (await productResponse.json()) as Product;
+            }),
+          );
+          setProducts(productDetails);
+        } catch (error) {
+          console.error("Error fetching cart:", error);
+        }
+      };
+
+      fetchCart();
+    }, []),
+  );
 
   if (!cart) {
     return <Text style={{ padding: 20 }}>Loading cart...</Text>;
   }
+
+  const updateQuantity = async (productId: number, change: number) => {
+    const nextProducts = cart.products
+      .map((item) =>
+        item.productId === productId
+          ? { ...item, quantity: item.quantity + change }
+          : item,
+      )
+      .filter((item) => item.quantity > 0);
+
+    setCart({ ...cart, products: nextProducts });
+    await AsyncStorage.setItem("cartIds", JSON.stringify(nextProducts));
+  };
 
   const cartTotal = cart.products.reduce((total, item) => {
     const product = products.find(({ id }) => id === item.productId);
@@ -77,7 +125,21 @@ const cart = () => {
                   ${product.price.toFixed(2)} each
                 </Text>
                 <View style={styles.itemFooter}>
-                  <Text style={styles.quantity}>Quantity: {item.quantity}</Text>
+                  <View style={styles.quantityControls}>
+                    <Pressable
+                      style={styles.quantityButton}
+                      onPress={() => updateQuantity(item.productId, -1)}
+                    >
+                      <Text style={styles.quantityButtonText}>-</Text>
+                    </Pressable>
+                    <Text style={styles.quantity}>{item.quantity}</Text>
+                    <Pressable
+                      style={styles.quantityButton}
+                      onPress={() => updateQuantity(item.productId, 1)}
+                    >
+                      <Text style={styles.quantityButtonText}>+</Text>
+                    </Pressable>
+                  </View>
                   <Text style={styles.itemTotal}>${itemTotal.toFixed(2)}</Text>
                 </View>
               </View>
@@ -94,7 +156,7 @@ const cart = () => {
   );
 };
 
-export default cart;
+export default CartScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -161,9 +223,29 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 14,
   },
+  quantityControls: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 10,
+  },
+  quantityButton: {
+    alignItems: "center",
+    backgroundColor: "#2563eb",
+    borderRadius: 6,
+    height: 32,
+    justifyContent: "center",
+    width: 32,
+  },
+  quantityButtonText: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontWeight: "700",
+  },
   quantity: {
     color: "#475569",
     fontSize: 14,
+    minWidth: 20,
+    textAlign: "center",
   },
   itemTotal: {
     color: "#2563eb",

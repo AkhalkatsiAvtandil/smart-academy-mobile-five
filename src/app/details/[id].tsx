@@ -1,4 +1,3 @@
-import { Product } from "@/types/types";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -9,6 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { Product } from "../../types/types";
 
 export default function ProductDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
