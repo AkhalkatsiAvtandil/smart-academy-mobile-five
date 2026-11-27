@@ -1,5 +1,5 @@
 import { Stack, useRouter } from "expo-router";
-import { Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 const DetailsLayout = () => {
   const router = useRouter();
@@ -9,15 +9,22 @@ const DetailsLayout = () => {
         headerShown: true,
         headerTitle: "Details",
         headerStyle: {
-          backgroundColor: "#ede1de",
+          backgroundColor: "#f6f7f3",
         },
-        headerTintColor: "#000000",
+        headerShadowVisible: false,
+        headerTintColor: "#183b30",
         headerTitleStyle: {
-          fontWeight: "bold",
+          color: "#183b30",
+          fontSize: 18,
+          fontWeight: "800",
         },
         headerLeft: () => (
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text style={{ marginRight: 10, color: "#000000" }}>უკან</Text>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <Text style={styles.backText}>უკან</Text>
           </TouchableOpacity>
         ),
       }}
@@ -26,3 +33,20 @@ const DetailsLayout = () => {
 };
 
 export default DetailsLayout;
+
+const styles = StyleSheet.create({
+  backButton: {
+    alignItems: "center",
+    backgroundColor: "#e7eee8",
+    borderRadius: 20,
+    justifyContent: "center",
+    marginLeft: 8,
+    minHeight: 36,
+    paddingHorizontal: 14,
+  },
+  backText: {
+    color: "#183b30",
+    fontSize: 14,
+    fontWeight: "800",
+  },
+});

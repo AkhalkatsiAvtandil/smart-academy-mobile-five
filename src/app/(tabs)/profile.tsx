@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { User } from "../../types/types";
+import ProfileSkeleton from "../skeletons/ProfileSkeleton";
 
 const ProfileScreen = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -13,11 +14,7 @@ const ProfileScreen = () => {
   }, []);
 
   if (!user) {
-    return (
-      <View style={styles.loading}>
-        <Text style={styles.loadingText}>Loading profile...</Text>
-      </View>
-    );
+    return <ProfileSkeleton />;
   }
 
   return (

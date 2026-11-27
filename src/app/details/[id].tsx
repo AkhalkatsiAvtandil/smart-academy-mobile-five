@@ -1,14 +1,9 @@
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Product } from "../../types/types";
+import ProductDetailsSkeleton from "../skeletons/ProductDetailsSkeleton";
 
 export default function ProductDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -24,12 +19,7 @@ export default function ProductDetails() {
   }, [id]);
 
   if (!product) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#2563eb" />
-        <Text style={styles.loadingText}>Loading product...</Text>
-      </View>
-    );
+    return <ProductDetailsSkeleton />;
   }
 
   return (

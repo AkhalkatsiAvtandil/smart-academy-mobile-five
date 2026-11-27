@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { Product } from "../../types/types";
+import ProductPageSkeleton from "../skeletons/ProductPageSkeleton";
 
 export default function Index() {
   const router = useRouter();
@@ -73,11 +74,7 @@ export default function Index() {
   };
 
   if (!products) {
-    return (
-      <View style={styles.loading}>
-        <Text style={styles.loadingText}>Loading products...</Text>
-      </View>
-    );
+    return <ProductPageSkeleton />;
   }
 
   return (

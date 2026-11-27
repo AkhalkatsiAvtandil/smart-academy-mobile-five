@@ -4,6 +4,7 @@ import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Cart, Product } from "../../types/types";
+import CartSkeleton from "../skeletons/CartSkeleton";
 
 const CartScreen = () => {
   const [cart, setCart] = useState<Cart | null>(null);
@@ -67,7 +68,7 @@ const CartScreen = () => {
   );
 
   if (!cart) {
-    return <Text style={{ padding: 20 }}>Loading cart...</Text>;
+    return <CartSkeleton />;
   }
 
   const updateQuantity = async (productId: number, change: number) => {
