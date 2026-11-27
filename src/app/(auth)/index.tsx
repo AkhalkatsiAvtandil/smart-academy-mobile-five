@@ -72,6 +72,7 @@ const LoginScreen = () => {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.form}>
+          <Text style={styles.eyebrow}>THE MARKET</Text>
           <AppTitle title="Welcome back" />
           <Text style={styles.subtitle}>Sign in to continue</Text>
 
@@ -107,7 +108,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#f6f7f3",
   },
   container: {
     flexGrow: 1,
@@ -116,20 +117,33 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
   },
   form: {
-    width: "100%",
-    maxWidth: 420,
-    alignSelf: "center",
     backgroundColor: "#ffffff",
-    borderRadius: 12,
+    borderColor: "#e8ece6",
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    paddingTop: 8,
-    paddingBottom: 20,
+    elevation: 3,
+    maxWidth: 420,
+    paddingBottom: 24,
+    shadowColor: "#183b30",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    width: "100%",
+    alignSelf: "center",
+  },
+  eyebrow: {
+    color: "#507362",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1.8,
+    marginTop: 22,
+    textAlign: "center",
   },
   subtitle: {
-    color: "#64748b",
+    color: "#748179",
     fontSize: 15,
-    marginBottom: 18,
+    marginBottom: 20,
+    marginTop: 4,
     textAlign: "center",
   },
   input: {
@@ -145,9 +159,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   link: {
-    color: "#2563eb",
-    fontWeight: "600",
-    marginTop: 8,
+    color: "#507362",
+    fontSize: 14,
+    fontWeight: "800",
+    marginTop: 10,
     textAlign: "center",
   },
   button: {

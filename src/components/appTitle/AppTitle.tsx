@@ -8,9 +8,12 @@ export default AppTitle;
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
+    color: "#183b30",
+    fontSize: 34,
+    fontWeight: "800",
+    letterSpacing: -0.8,
+    lineHeight: 40,
     textAlign: "center",
-    marginVertical: 16,
+    marginTop: 18,
   },
 });

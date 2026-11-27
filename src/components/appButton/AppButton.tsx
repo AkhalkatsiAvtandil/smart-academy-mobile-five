@@ -28,17 +28,18 @@ export default AppButton;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#007bff",
-    paddingVertical: 12,
-    marginVertical: 12,
-    borderRadius: 8,
     alignItems: "center",
-    width: "94%",
     alignSelf: "center",
+    backgroundColor: "#183b30",
+    borderRadius: 13,
+    minHeight: 50,
+    justifyContent: "center",
+    marginVertical: 10,
+    width: "100%",
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: "#ffffff",
+    fontSize: 15,
+    fontWeight: "800",
   },
 });

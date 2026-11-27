@@ -25,6 +25,8 @@ const AppInput = ({
       <TextInput
         {...props}
         placeholder={placeholder}
+        placeholderTextColor="#91a097"
+        style={styles.textInput}
         onChangeText={onChangeText}
         value={value}
         autoCapitalize="none"
@@ -37,12 +39,17 @@ export default AppInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    paddingVertical: 8,
     marginHorizontal: 16,
-    paddingHorizontal: 12,
-    borderRadius: 8,
+    paddingHorizontal: 14,
+    borderRadius: 13,
     borderWidth: 1,
-    borderColor: "#ccc",
-    marginVertical: 8,
+    borderColor: "#e8ece6",
+    backgroundColor: "#f3f5f0",
+    marginVertical: 7,
+  },
+  textInput: {
+    color: "#202d27",
+    fontSize: 15,
+    minHeight: 48,
   },
 });

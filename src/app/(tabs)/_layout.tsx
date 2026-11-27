@@ -62,6 +62,27 @@ const _layout = () => {
         }}
       />
       <Tabs.Screen
+        name="polygon"
+        options={{
+          title: "Polygon",
+          tabBarLabel: "პოლიგონი",
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={[
+                styles.iconContainer,
+                focused && styles.iconContainerActive,
+              ]}
+            >
+              <Feather
+                name="camera"
+                size={19}
+                color={focused ? "#1b4938" : "#91a097"}
+              />
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
